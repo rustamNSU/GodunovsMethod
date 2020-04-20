@@ -2,8 +2,6 @@
 
 #include <vector>
 #include <memory>
-#include <functional>
-#include <utility>
 
 class Mesh
 {
@@ -14,7 +12,7 @@ public:
     Mesh();
     Mesh(size_t points_number, double left, double right);
     void SetMesh(size_t points_number, double left, double right);
-    size_t GetSize();
+    size_t GetSize() const;
     double operator[](size_t index) const;
     double& operator[](size_t index);
 };
@@ -23,29 +21,26 @@ public:
 class SliceFunction
 {
 private:
-    std::shared_ptr<Mesh> mesh;
     std::vector<double> value;
 
 public:
     SliceFunction();
-    SliceFunction(const Mesh &mesh);
-    SliceFunction(std::shared_ptr<Mesh> mesh);
-    SliceFunction(const std::shared_ptr<Mesh> &mesh);
-
-    void SetValue(std::function<double(double)> f);
+    SliceFunction(const Mesh &mesh, double(*f)(double));
+    void SetValue(const Mesh &mesh, double(*f)(double));
 };
 
 class Function
 {
 private:
-    /* Time + SliceFunction bbinding with time */
+    /* Time + SliceFunction binding with time */
     std::vector<std::pair<double, SliceFunction>> data;
-    std::shared_ptr<Mesh> mesh;
+    const Mesh &mesh;
 
 public:
-    Function();
+    Function(const Mesh &mesh);
 
-    void SetInitialValue(SliceFunction initial_value, double initial_time = 0.0);
+    void SetInitialValue(double(*f_initial)(double), double initial_time = 0.0);
+    void SetInitialValue(SliceFunction &&initial_value, double initial_time = 0.0);
     void SetInitialValue(const SliceFunction &initial_value, double initial_time = 0.0);
 
 };

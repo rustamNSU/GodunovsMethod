@@ -19,7 +19,7 @@ void Mesh::SetMesh(size_t points_number, double left, double right)
     this->mesh.back() = right;
 }
 
-size_t Mesh::GetSize()
+size_t Mesh::GetSize () const
 {
     return mesh.size();
 }
@@ -35,46 +35,42 @@ double& Mesh::operator[](size_t index)
 }
 
 SliceFunction::SliceFunction() = default;
-SliceFunction::SliceFunction(const Mesh &mesh)
+
+SliceFunction::SliceFunction(const Mesh &mesh, double(*f)(double))
 {
-    this->mesh = std::make_shared<Mesh>(mesh);
-    this->value = std::vector<double>(this->mesh->GetSize(), 0.0);
+    this->SetValue(mesh, f);
 }
 
-SliceFunction::SliceFunction(std::shared_ptr<Mesh> mesh)
-{
-    this->mesh = mesh;
-    this->value = std::vector<double>(mesh->GetSize(), 0.0);
-}
-
-SliceFunction::SliceFunction(const std::shared_ptr<Mesh> &mesh)
-{
-    this->mesh = mesh;
-    this->value = std::vector<double>(mesh->GetSize(), 0.0);
-}
-
-void SliceFunction::SetValue(std::function<double(double)> f)
+void SliceFunction::SetValue(const Mesh &mesh, double(*f)(double))
 {
     int index = 0;
-    for (auto &elem : this->value)
+    std::vector<double> result(mesh.GetSize());
+    for (auto &elem : result)
     {
-        elem = f((*mesh)[index]);
+        elem = f(mesh[index]);
         ++index;
     }
+    this->value = result;
 }
 
-void Function::SetInitialValue(SliceFunction initial_value, double initial_time)
+Function::Function(const Mesh &mesh): mesh(mesh){}
+
+void Function::SetInitialValue(double(*f_initial)(double), double initial_time)
 {
-    if (data.size() != 0){
-        return;
+    if (data.empty()){
+        data.emplace_back(initial_time, SliceFunction(this->mesh, f_initial));
     }
-    data.emplace_back(initial_time, initial_value);
+}
+void Function::SetInitialValue(SliceFunction &&initial_value, double initial_time)
+{
+    if (data.empty()){
+        data.emplace_back(initial_time, initial_value);
+    }
 }
 
 void Function::SetInitialValue(const SliceFunction &initial_value, double initial_time)
 {
-    if (data.size() != 0){
-        return;
+    if (data.empty()){
+        data.emplace_back(initial_time, initial_value);
     }
-    data.push_back(std::pair(initial_time, initial_value));
 }

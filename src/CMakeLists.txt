@@ -18,7 +18,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # Compile library from source files in SOURCES variable
 # add_library(<name> <type> <sources>)
 # This is a static library
-add_library (GodunovMethod ${SOURCES})
+add_library (GodunovMethod ${SOURCES} Euler1d.cpp)
 
 # Include directories connected with this library
 # Compiler will search headers in this folder when other library or executable is going to link with this library
