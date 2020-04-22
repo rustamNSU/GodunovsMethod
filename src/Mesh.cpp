@@ -10,13 +10,13 @@ void Mesh::SetMesh(size_t points_number, double left, double right)
 {
     this->mesh.resize(points_number);
     
-    double step = (right - left) / (points_number - 1);
+    double step = (right - left) / points_number;
+    double element_center = left + step / 2.0;
     for (auto &elem : this->mesh)
     {
-        elem = left;
-        left += step;
+        elem = element_center;
+        element_center += step;
     }
-    this->mesh.back() = right;
 }
 
 size_t Mesh::GetSize () const
