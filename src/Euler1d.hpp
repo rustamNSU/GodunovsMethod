@@ -5,7 +5,7 @@
 #include <algorithm>
 #include "Mesh.hpp"
 #include "RiemannSolvers.hpp"
-
+#include "EulerRiemannProblem.hpp"
 
 class Euler1dState {
 private:
