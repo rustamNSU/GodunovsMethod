@@ -5,7 +5,8 @@ EulerVariables::EulerVariables(
         double velocity,
         double density,
         double pressure,
-        double gamma) {
+        double gamma)
+{
     this->u = velocity;
     this->rho = density;
     this->pressure = pressure;
@@ -16,7 +17,20 @@ EulerVariables::EulerVariables(
     this->energy = rho * enthalpy - pressure;
 }
 
-VariableVector3 EulerVariables::ConservativeVariable() {
+void EulerVariables::RestoreFromConservativeVariable(VariableVector3 conservative_variable)
+{
+    this->x = conservative_variable.x;
+    this->rho = conservative_variable.q1;
+    this->u = conservative_variable.q2 / conservative_variable.q1;
+    this->energy = conservative_variable.q3;
+
+    this->pressure = (gamma - 1.0) * (energy - rho * u * u / 2.0);
+    this->sound_speed = std::sqrt(gamma * pressure / rho);
+    this->enthalpy = u * u / 2.0 + sound_speed * sound_speed / (gamma - 1.0);
+}
+
+VariableVector3 EulerVariables::ConservativeVariable() const
+{
     return VariableVector3(
             x,
             rho,
@@ -25,7 +39,8 @@ VariableVector3 EulerVariables::ConservativeVariable() {
     );
 }
 
-VariableVector3 operator+(const VariableVector3 &v1, const VariableVector3 &v2) {
+VariableVector3 operator+(const VariableVector3 &v1, const VariableVector3 &v2)
+{
     VariableVector3 result(
             (v1.x + v2.x) / 2.0,
             v1.q1 + v2.q1,
@@ -35,7 +50,8 @@ VariableVector3 operator+(const VariableVector3 &v1, const VariableVector3 &v2) 
     return result;
 }
 
-VariableVector3 operator-(const VariableVector3 &v1, const VariableVector3 &v2) {
+VariableVector3 operator-(const VariableVector3 &v1, const VariableVector3 &v2)
+{
     VariableVector3 result(
             (v1.x - v2.x) / 2.0,
             v1.q1 - v2.q1,
@@ -45,7 +61,8 @@ VariableVector3 operator-(const VariableVector3 &v1, const VariableVector3 &v2) 
     return result;
 }
 
-VariableVector3 operator*(double scalar, const VariableVector3 &v) {
+VariableVector3 operator*(double scalar, const VariableVector3 &v)
+{
     VariableVector3 result(
             v.x,
             scalar * v.q1,
@@ -59,7 +76,8 @@ VariableVector3 CalculateFlux(
         double velocity,
         double enthalpy,
         double gamma,
-        const VariableVector3 &conservative_variable) {
+        const VariableVector3 &conservative_variable)
+{
     VariableVector3 flux;
     flux.x = conservative_variable.x;
     flux.q1 = conservative_variable.q2;
@@ -72,7 +90,8 @@ VariableVector3 CalculateFlux(
     return flux;
 }
 
-VariableVector3 RoeSolver(EulerVariables f_left, EulerVariables f_right) {
+VariableVector3 RoeSolver(const EulerVariables &f_left, const EulerVariables &f_right)
+{
     double sqrt_rho_left = std::sqrt(f_left.rho);
     double sqrt_rho_right = std::sqrt(f_right.rho);
 

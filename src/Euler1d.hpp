@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cmath>
+#include <algorithm>
 #include "Mesh.hpp"
 #include "RiemannSolvers.hpp"
 
@@ -11,15 +12,17 @@ private:
     Function u; // The flow velocity
     Function rho; // The density
     Function pressure; // The pressure
-    Function Energy; // The Energy
+    Function energy; // The Energy
+    Function sound_speed; // The sound speed
     Mesh mesh;
 
     double gamma = 1.4; // The adiabatic index
     double initial_time = 0.0;
     double time_step;
 
-    /* Addition function */
+    /* Addition */
     using Functor = double (*)(double);
+    using RiemannSolver = VariableVector3(*)(const EulerVariables &, const EulerVariables &);
 
 public:
     Euler1dState() = delete;
@@ -40,9 +43,15 @@ public:
 
     Function GetPressure() const;
 
-    template<typename Method>
-    void CalculateNextLayer(Method* method);
+    void SetTimeStep(double CFL = 0.5);
 
-    template<typename Method>
-    void CalculateNextLayer(Method* method, double time_step);
+    void CalculateNextLayer(RiemannSolver method);
+
+    void CalculateNextLayer(RiemannSolver method, double time_step);
+
+    void Calculate(RiemannSolver method, double end_time);
+
+    std::vector<EulerVariables> GenerateEulerVariable();
+
+    void AddNextLayer(std::vector<EulerVariables> euler_variable, double time_step);
 };
