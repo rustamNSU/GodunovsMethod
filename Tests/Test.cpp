@@ -53,6 +53,10 @@ TEST(Euler1dTest, SodShockTube)
     auto rho = model.GetDensity();
     auto pressure = model.GetPressure();
 
+    cout << "Number of layers = " << model.GetLayersNumber() << endl;
+    cout << static_cast<int>(model.GetLayersNumber() / 2) << " - layer time = "
+         << model.GetLayerTime(model.GetLayersNumber() / 2) << endl;
+
     cout << "exact Sod:" << endl;
     cout << "  exact_solution(0.1, 1.0) = " << exact_solution(0.1, 1.0).rho << endl;
 }

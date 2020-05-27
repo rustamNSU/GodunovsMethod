@@ -44,6 +44,7 @@ void Euler1dState::SetInitialValues(
     sound_speed.SetInitialValue(initial_sound_speed, initial_time);
     this->initial_time = initial_time;
     SetTimeStep();
+    layers_number++;
 }
 
 Function Euler1dState::GetVelocity() const
@@ -64,6 +65,27 @@ Function Euler1dState::GetPressure() const
 Mesh Euler1dState::GetMesh() const
 {
     return mesh;
+}
+
+int Euler1dState::GetLayersNumber() const
+{
+    return layers_number;
+}
+
+EulerVariables Euler1dState::GetEulerVariables(size_t layer_number, size_t element_number) const
+{
+    return EulerVariables(
+            mesh[element_number],
+            u.GetElement(layer_number,element_number),
+            rho.GetElement(layer_number,element_number),
+            pressure.GetElement(layer_number,element_number),
+            gamma
+            );
+}
+
+double Euler1dState::GetLayerTime(size_t layer_number) const
+{
+    return u.GetLayerTime(layer_number);
 }
 
 void Euler1dState::SetTimeStep(double CFL)
@@ -179,5 +201,7 @@ void Euler1dState::AddNextLayer(std::vector<EulerVariables> euler_variable, doub
     pressure.AddLayer(time_step, SliceFunction(std::move(pressure_next)));
     energy.AddLayer(time_step, SliceFunction(std::move(energy_next)));
     sound_speed.AddLayer(time_step, SliceFunction(std::move(sound_speed_next)));
+
+    layers_number++;
 }
 

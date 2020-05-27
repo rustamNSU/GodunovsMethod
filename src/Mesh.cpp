@@ -194,6 +194,16 @@ double Function::GetLastTimeStep()
     return data.back().first;
 }
 
+double Function::GetElement(size_t layer_number, size_t element_number) const
+{
+    return (data.at(layer_number).second)[element_number];
+}
+
+double Function::GetLayerTime(size_t layer_number) const
+{
+    return data.at(layer_number).first;
+}
+
 SliceFunction Function::GetLastLayer()
 {
     return data.back().second;

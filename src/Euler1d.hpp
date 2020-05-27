@@ -17,6 +17,7 @@ private:
     double gamma = 1.4; // The adiabatic index
     double initial_time = 0.0;
     double time_step;
+    int layers_number = 0;
 
     /* Addition */
     using Functor = std::function<double(double)>;
@@ -42,6 +43,12 @@ public:
     Function GetPressure() const;
 
     Mesh GetMesh() const;
+
+    int GetLayersNumber() const;
+
+    EulerVariables GetEulerVariables(size_t layer_number, size_t element_number) const;
+
+    double GetLayerTime(size_t layer_number) const;
 
     void SetTimeStep(double CFL = 0.5);
 

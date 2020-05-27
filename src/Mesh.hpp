@@ -78,6 +78,10 @@ public:
 
     double GetLastTimeStep();
 
+    double GetElement(size_t layer_number, size_t element_number) const;
+
+    double GetLayerTime(size_t layer_number) const;
+
     SliceFunction GetLastLayer();
 
     void AddLayer(double time_step, SliceFunction &&value);
