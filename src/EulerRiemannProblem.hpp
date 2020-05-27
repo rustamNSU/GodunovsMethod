@@ -40,6 +40,8 @@ class EulerRiemannProblem {
     double Str; // The right rarefaction Tail-wave speed
 
 public:
+    EulerRiemannProblem();
+
     EulerRiemannProblem(
             double rhol, // The initial density x < 0
             double ul, // The initial velocity x < 0
@@ -48,7 +50,17 @@ public:
             double ur, // The initial velocity x > 0
             double pr, // The initial pressure x > 0
             double gamma = 1.4
-            );
+    );
+
+    void setInitialValues(
+            double rhol, // The initial density x < 0
+            double ul, // The initial velocity x < 0
+            double pl, // The initial pressure x < 0
+            double rhor, // The initial density x > 0
+            double ur, // The initial velocity x > 0
+            double pr, // The initial pressure x > 0
+            double gamma = 1.4
+    );
 
     EulerVariables operator()(double x, double t);
 

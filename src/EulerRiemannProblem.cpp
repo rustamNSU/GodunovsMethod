@@ -1,5 +1,7 @@
 #include "EulerRiemannProblem.hpp"
 
+EulerRiemannProblem::EulerRiemannProblem() = default;
+
 EulerRiemannProblem::EulerRiemannProblem(
         double rhol,
         double ul,
@@ -7,11 +9,28 @@ EulerRiemannProblem::EulerRiemannProblem(
         double rhor,
         double ur,
         double pr,
-        double gamma) :
-        rhol(rhol), ul(ul), pl(pl),
-        rhor(rhor), ur(ur), pr(pr),
-        gamma(gamma)
+        double gamma)
 {
+    setInitialValues(rhol, ul, pl, rhor, ur, pr, gamma);
+}
+
+void EulerRiemannProblem::setInitialValues(
+        double rhol,
+        double ul,
+        double pl,
+        double rhor,
+        double ur,
+        double pr,
+        double gamma)
+{
+    this->rhol = rhol;
+    this->ul = ul;
+    this->pl = pl;
+    this->rhor = rhor;
+    this->ur = ur;
+    this->pr = pr;
+    this->gamma = gamma;
+
     Al = 2.0 / (gamma + 1.0) / rhol;
     Ar = 2.0 / (gamma + 1.0) / rhor;
     Bl = (gamma - 1.0) * pl / (gamma + 1.0);

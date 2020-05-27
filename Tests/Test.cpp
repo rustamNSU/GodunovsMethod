@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+using namespace std;
+
 TEST(Euler1dTest, InitialTest)
 {
     Euler1dState model(0.0, 1.0, 10);
@@ -50,4 +52,7 @@ TEST(Euler1dTest, SodShockTube)
     auto u = model.GetVelocity();
     auto rho = model.GetDensity();
     auto pressure = model.GetPressure();
+
+    cout << "exact Sod:" << endl;
+    cout << "  exact_solution(0.1, 1.0) = " << exact_solution(0.1, 1.0).rho << endl;
 }
