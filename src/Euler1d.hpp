@@ -41,6 +41,8 @@ public:
 
     Function GetPressure() const;
 
+    Mesh GetMesh() const;
+
     void SetTimeStep(double CFL = 0.5);
 
     void CalculateNextLayer(RiemannSolver method);

@@ -61,6 +61,11 @@ Function Euler1dState::GetPressure() const
     return this->pressure;
 }
 
+Mesh Euler1dState::GetMesh() const
+{
+    return mesh;
+}
+
 void Euler1dState::SetTimeStep(double CFL)
 {
     auto eigen_value1 = u.GetLastLayer() - sound_speed.GetLastLayer();
