@@ -32,11 +32,11 @@ TEST(Euler1dTest, SodShockTube)
     };
     auto SodInitialPressure = [](double x)
     {
-        if (x < 0.5) {return 1.0; }
+        if (x < 0.5) {return 10.0; }
         else {return 0.1; }
     };
 
-    EulerRiemannProblem exact_solution(1.0, 0.0, 1.0,0.125, 0.0, 0.1);
+    EulerRiemannProblem exact_solution(1.0, 0.0, 10.0,0.125, 0.0, 0.1);
     exact_solution.DefineRiemannWaveType();
     double end_time = 0.2;
     size_t N = 100;

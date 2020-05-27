@@ -164,7 +164,8 @@ double EulerRiemannProblem::p0TR()
     double numerator = cl + cr - 0.5 * (gamma - 1.0) * (ur - ul);
     double denominator = std::pow(cl / pl, 0.5 * (gamma - 1.0) / gamma) +
                          std::pow(cr / pr, 0.5 * (gamma - 1.0) / gamma);
-    return std::pow(numerator / denominator, 2 * gamma / (gamma - 1.0));
+    double power = 2 * gamma / (gamma - 1.0);
+    return std::pow(numerator / denominator, power);
 }
 
 void EulerRiemannProblem::FindInnerPressure(double p0, double tolerance)
@@ -173,6 +174,14 @@ void EulerRiemannProblem::FindInnerPressure(double p0, double tolerance)
     {
         double p1 = p0 - (FunctionLeft(p0) + FunctionRight(p0) + ur - ul) /
                          (DerivativeFunctionLeft(p0) + DerivativeFunctionRight(p0));
+
+        /* bad initial value */
+        if (p1 < 0)
+        {
+            p0 = 0.5 * (pl + pr);
+            continue;
+        }
+
         if (0.5 * std::abs((p1 - p0) / (p1 + p0)) < tolerance)
         {
             this->inner_pressure = p1;
