@@ -1,4 +1,6 @@
 #include "Euler1d.hpp"
+#include <cmath>
+#include <algorithm>
 
 Euler1dState::Euler1dState(const Mesh &mesh) :
         mesh(mesh),

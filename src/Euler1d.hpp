@@ -1,8 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <cmath>
-#include <algorithm>
 #include "Mesh.hpp"
 #include "RiemannSolvers.hpp"
 #include "EulerRiemannProblem.hpp"
@@ -21,7 +19,7 @@ private:
     double time_step;
 
     /* Addition */
-    using Functor = double (*)(double);
+    using Functor = std::function<double(double)>;
     using RiemannSolver = VariableVector3(*)(const EulerVariables &, const EulerVariables &);
 
 public:

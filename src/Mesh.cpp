@@ -51,7 +51,24 @@ SliceFunction::SliceFunction(const Mesh &mesh, double(* f)(double))
     this->SetValue(mesh, f);
 }
 
+SliceFunction::SliceFunction(const Mesh &mesh, std::function<double(double)> f)
+{
+    this->SetValue(mesh, f);
+}
+
 void SliceFunction::SetValue(const Mesh &mesh, double(* f)(double))
+{
+    int index = 0;
+    std::vector<double> result(mesh.GetSize());
+    for (auto &elem : result)
+    {
+        elem = f(mesh[index]);
+        ++index;
+    }
+    this->value = result;
+}
+
+void SliceFunction::SetValue(const Mesh &mesh, std::function<double(double)> f)
 {
     int index = 0;
     std::vector<double> result(mesh.GetSize());
@@ -141,6 +158,14 @@ Function::Function(const Mesh &mesh) : mesh(mesh)
 }
 
 void Function::SetInitialValue(double(* f_initial)(double), double initial_time)
+{
+    if (data.empty())
+    {
+        data.emplace_back(initial_time, SliceFunction(this->mesh, f_initial));
+    }
+}
+
+void Function::SetInitialValue(std::function<double(double)> f_initial, double initial_time)
 {
     if (data.empty())
     {

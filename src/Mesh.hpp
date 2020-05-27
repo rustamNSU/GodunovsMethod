@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <utility>
+#include <functional>
 
 class Mesh {
 private:
@@ -37,7 +38,11 @@ public:
 
     SliceFunction(const Mesh &mesh, double(* f)(double));
 
+    SliceFunction(const Mesh &mesh, std::function<double(double)> f);
+
     void SetValue(const Mesh &mesh, double(* f)(double));
+
+    void SetValue(const Mesh &mesh, std::function<double(double)> f);
 
     double operator[](size_t index) const;
 
@@ -64,6 +69,8 @@ public:
     Function(const Mesh &mesh);
 
     void SetInitialValue(double(* f_initial)(double), double initial_time = 0.0);
+
+    void SetInitialValue(std::function<double(double)> f_initial, double initial_time = 0.0);
 
     void SetInitialValue(SliceFunction &&initial_value, double initial_time = 0.0);
 
